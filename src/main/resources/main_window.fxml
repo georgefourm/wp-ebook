@@ -13,7 +13,7 @@
       <HBox spacing="10.0" style="-fx-padding: 10px;" BorderPane.alignment="CENTER">
          <children>
             <Label text="URL:" />
-            <TextField fx:id="urlField"/>
+            <TextField fx:id="urlField" />
             <Button mnemonicParsing="false" onAction="#handleFetch" text="Fetch Categories" />
          </children>
          <opaqueInsets>
@@ -22,6 +22,6 @@
       </HBox>
    </top>
    <left>
-      <ListView fx:id="categoryList" />
+      <ListView fx:id="categoryList" minWidth="-Infinity" prefWidth="350.0" />
    </left>
 </BorderPane>
