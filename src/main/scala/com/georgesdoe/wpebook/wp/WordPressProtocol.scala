@@ -10,6 +10,7 @@ object WordPressProtocol extends DefaultJsonProtocol {
   implicit object urlFormat extends JsonFormat[URL] {
     override def read(json: JsValue): URL = json match {
       case JsString(value) => new URL(value)
+      case _ => throw new RuntimeException(s"Could not parse JSON string: ${json.toString()}")
     }
 
     override def write(url: URL): JsValue = JsString(url.toString)
@@ -18,6 +19,7 @@ object WordPressProtocol extends DefaultJsonProtocol {
   implicit object dateTimeFormat extends JsonFormat[LocalDateTime] {
     override def read(json: JsValue): LocalDateTime = json match {
       case JsString(value) => LocalDateTime.parse(value)
+      case _ => throw new RuntimeException(s"Could not parse JSON string: ${json.toString()}")
     }
 
     override def write(dateTime: LocalDateTime): JsValue = new JsString(dateTime.toString)

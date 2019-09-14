@@ -1,0 +1,11 @@
+.text {
+    -fx-font: 1.5em "Helvetica"
+}
+
+.background-dark{
+    -fx-fill: "#23282d"
+}
+
+.background-light{
+    -fx-fill: "#0073aa"
+}

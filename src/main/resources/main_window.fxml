@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.georgesdoe.wpebook.ui.MainWindowController">
+   <top>
+      <HBox spacing="10.0" style="-fx-padding: 10px;" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="URL:" />
+            <TextField fx:id="urlField"/>
+            <Button mnemonicParsing="false" onAction="#handleFetch" text="Fetch Categories" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </HBox>
+   </top>
+   <left>
+      <ListView fx:id="categoryList" />
+   </left>
+</BorderPane>

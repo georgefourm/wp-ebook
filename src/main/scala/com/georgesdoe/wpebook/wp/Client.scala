@@ -27,7 +27,7 @@ class Client(baseUrl: String) {
     val response = requests.get(
       s"$baseUrl/wp-json/wp/v2/categories",
       params = Map(
-        "orderby" -> "title",
+        "orderby" -> "name",
         "order" -> "asc",
         "per_page" -> per_page.toString
       )
