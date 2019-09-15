@@ -1,38 +1,35 @@
 package com.georgesdoe.wpebook.ui
 
-import java.util.concurrent.{ExecutorService, Executors}
-
 import com.georgesdoe.wpebook.wp.{Category, Client}
+import javafx.concurrent.{Service, Task}
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
 import scalafx.scene.control.{Button, ListView, TextField}
 import scalafxml.core.macros.sfxml
 
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutorService, Future}
-
 @sfxml
 class MainWindowController(categoryList: ListView[Category],
-                            fetchButton: Button,
+                           fetchButton: Button,
                            urlField: TextField) {
 
-  val categories = new ObservableBuffer[Category]()
+  private val categories = new ObservableBuffer[Category]()
+  categoryList.items = categories
 
-  val singleThreadedPool: ExecutorService = Executors.newSingleThreadExecutor()
-
-  def handleFetch(event: ActionEvent): Unit ={
-    val client = new Client(urlField.text.value)
-
-    implicit val ec: ExecutionContextExecutorService = ExecutionContext.fromExecutorService(singleThreadedPool)
-    val fetch = Future{
-       client.fetchCategories(70)
+  private val fetchCategoriesService = new Service[List[Category]]() {
+    override def createTask(): Task[List[Category]] = () => {
+      val client = new Client(urlField.text.value)
+      client.fetchCategories(70)
     }
+  }
 
-    fetch.onComplete(list => {
-      categories.clear()
-      categories.addAll(list.get)
-      categoryList.items = categories;
-    })
+  fetchCategoriesService.setOnSucceeded(_ => {
+    categories.clear()
+    categories.addAll(fetchCategoriesService.getValue)
+    fetchCategoriesService.reset()
+  })
 
+  def handleFetch(event: ActionEvent): Unit = {
+    fetchCategoriesService.start()
   }
 
 }
