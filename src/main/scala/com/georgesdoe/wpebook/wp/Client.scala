@@ -15,7 +15,11 @@ class Client(baseUrl: String) {
   def fetchPosts(categoryId: Int): List[Post] = {
     val response = requests.get(
       s"$baseUrl/wp-json/wp/v2/posts",
-      params = Map("categories" -> categoryId.toString)
+      params = Map(
+        "categories" -> categoryId.toString,
+        "orderby" -> "date",
+        "order" -> "desc"
+      )
     )
 
     val json = response.text.parseJson
