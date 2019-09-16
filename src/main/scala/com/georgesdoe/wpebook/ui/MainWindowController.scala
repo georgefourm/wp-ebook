@@ -1,5 +1,6 @@
 package com.georgesdoe.wpebook.ui
 
+import com.georgesdoe.wpebook.ebook.BookWriterService
 import com.georgesdoe.wpebook.wp.{Category, Client, Post}
 import javafx.concurrent.{Service, Task}
 import scalafx.beans.property.StringProperty
@@ -44,6 +45,12 @@ class MainWindowController(categoryList: ListView[Category], urlField: TextField
     }
   }
 
+  private val writeBookService = new Service[Unit] {
+    override def createTask(): Task[Unit] = () => {
+      BookWriterService.write(posts.toList)
+    }
+  }
+
   fetchPostsService.setOnSucceeded(_ => {
     posts.clear()
     posts.addAll(fetchPostsService.getValue)
@@ -56,12 +63,20 @@ class MainWindowController(categoryList: ListView[Category], urlField: TextField
     fetchCategoriesService.reset()
   })
 
+  writeBookService.setOnSucceeded(_ => {
+    writeBookService.reset()
+  })
+
   def fetchCategories(event: ActionEvent): Unit = {
     fetchCategoriesService.start()
   }
 
   def fetchPosts(event: ActionEvent): Unit = {
     fetchPostsService.start()
+  }
+
+  def writeBook(event: ActionEvent): Unit = {
+    writeBookService.start()
   }
 
 }

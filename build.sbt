@@ -11,7 +11,11 @@ libraryDependencies ++= Seq(
   "com.lihaoyi" %% "requests" % "0.2.0",
   "io.spray" %%  "spray-json" % "1.3.5",
   "org.scalafx" %% "scalafx" % "12.0.2-R18",
-  "org.scalafx" % "scalafxml-core-sfx8_2.13" % "0.5"
+  "org.scalafx" % "scalafxml-core-sfx8_2.13" % "0.5",
+  "com.positiondev.epublib" % "epublib-core" % "3.1" excludeAll(
+    ExclusionRule(organization = "xmlpull")
+  ),
+  "com.lihaoyi" %% "scalatags" % "0.7.0"
 )
 
 lazy val osName = System.getProperty("os.name") match {

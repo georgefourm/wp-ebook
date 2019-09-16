@@ -36,18 +36,19 @@
         </VBox>
     </left>
     <center>
-        <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" fx:id="postsTable">
+        <TableView fx:id="postsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn editable="false" prefWidth="200" text="Title" fx:id="titleColumn"/>
-                <TableColumn editable="false" prefWidth="130" text="URL" fx:id="urlColumn"/>
-                <TableColumn editable="false" prefWidth="130" text="Date" fx:id="dateColumn"/>
+                <TableColumn fx:id="titleColumn" editable="false" prefWidth="200" text="Title" />
+                <TableColumn fx:id="urlColumn" editable="false" prefWidth="130" text="URL" />
+                <TableColumn fx:id="dateColumn" editable="false" prefWidth="130" text="Date" />
             </columns>
         </TableView>
     </center>
    <bottom>
       <TilePane alignment="CENTER_LEFT" hgap="20.0" prefHeight="70.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Fetch Posts" onAction="#fetchPosts"/>
+            <Button mnemonicParsing="false" onAction="#fetchPosts" text="Fetch Posts" />
+            <Button mnemonicParsing="false" text="Write" onAction="#writeBook"/>
          </children>
          <padding>
             <Insets left="50.0" />
