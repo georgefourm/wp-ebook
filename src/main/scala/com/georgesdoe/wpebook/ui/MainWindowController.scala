@@ -6,7 +6,8 @@ import javafx.concurrent.{Service, Task}
 import scalafx.beans.property.StringProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
-import scalafx.scene.control.{ListView, TableColumn, TableView, TextField}
+import scalafx.scene.control.Alert.AlertType
+import scalafx.scene.control.{Alert, ListView, TableColumn, TableView, TextField}
 import scalafxml.core.macros.sfxml
 
 @sfxml
@@ -64,6 +65,20 @@ class MainWindowController(categoryList: ListView[Category], urlField: TextField
   })
 
   writeBookService.setOnSucceeded(_ => {
+    new Alert(AlertType.Information) {
+      title = "Success"
+      headerText = "Writing Succeeded"
+      contentText = "Book written to output/collection.epub"
+    }.showAndWait()
+    writeBookService.reset()
+  })
+
+  writeBookService.setOnFailed(_ => {
+    new Alert(AlertType.Information) {
+      title = "Error"
+      headerText = "Writing Failed"
+      contentText = "Error while writing ebook"
+    }.showAndWait()
     writeBookService.reset()
   })
 
