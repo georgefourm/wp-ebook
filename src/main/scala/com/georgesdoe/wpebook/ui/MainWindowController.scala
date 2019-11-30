@@ -1,17 +1,18 @@
 package com.georgesdoe.wpebook.ui
 
-import com.georgesdoe.wpebook.ebook.BookWriterService
+import com.georgesdoe.wpebook.ui.service.BookWriterService
 import com.georgesdoe.wpebook.wp.{Category, Client, Post}
 import javafx.concurrent.{Service, Task}
 import scalafx.beans.property.StringProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
 import scalafx.scene.control.Alert.AlertType
-import scalafx.scene.control.{Alert, ListView, TableColumn, TableView, TextField}
+import scalafx.scene.control.{Alert, ButtonType, ListView, TableColumn, TableView, TextField}
+import scalafx.stage.DirectoryChooser
 import scalafxml.core.macros.sfxml
 
 @sfxml
-class MainWindowController(categoryList: ListView[Category], urlField: TextField, postsTable: TableView[Post],
+class MainWindowController(categoryList: ListView[Category], urlField: TextField, postsTable: TableView[Post], postsCount: TextField,
                            titleColumn: TableColumn[Post, String], urlColumn: TableColumn[Post, String], dateColumn: TableColumn[Post, String]) {
 
   private val categories = new ObservableBuffer[Category]()
@@ -35,20 +36,16 @@ class MainWindowController(categoryList: ListView[Category], urlField: TextField
   private val fetchCategoriesService = new Service[List[Category]]() {
     override def createTask(): Task[List[Category]] = () => {
       val client = new Client(urlField.text.value)
-      client.fetchCategories(70)
+      client.fetchCategories(100)
     }
   }
 
   private val fetchPostsService = new Service[List[Post]]() {
     override def createTask(): Task[List[Post]] = () => {
       val client = new Client(urlField.text.value)
-      client.fetchPosts(categoryList.selectionModel.value.getSelectedItem.id)
-    }
-  }
-
-  private val writeBookService = new Service[Unit] {
-    override def createTask(): Task[Unit] = () => {
-      BookWriterService.write(posts.toList)
+      val number = postsCount.text.value.toIntOption
+      val categoryId = categoryList.selectionModel.value.getSelectedItem.id
+      client.fetchPosts(categoryId, number.get)
     }
   }
 
@@ -58,29 +55,29 @@ class MainWindowController(categoryList: ListView[Category], urlField: TextField
     fetchPostsService.reset()
   })
 
+  fetchPostsService.setOnFailed(_ => {
+    showError("Error Fetching Posts", fetchPostsService.getException)
+    fetchPostsService.reset()
+  })
+
   fetchCategoriesService.setOnSucceeded(_ => {
     categories.clear()
     categories.addAll(fetchCategoriesService.getValue)
     fetchCategoriesService.reset()
   })
 
-  writeBookService.setOnSucceeded(_ => {
-    new Alert(AlertType.Information) {
-      title = "Success"
-      headerText = "Writing Succeeded"
-      contentText = "Book written to output/collection.epub"
-    }.showAndWait()
-    writeBookService.reset()
+  fetchCategoriesService.setOnFailed(_ => {
+    showError("Error Fetching Categories", fetchCategoriesService.getException)
+    fetchCategoriesService.reset()
   })
 
-  writeBookService.setOnFailed(_ => {
+  private def showError(message: String, exception: Throwable): Option[ButtonType] = {
     new Alert(AlertType.Information) {
       title = "Error"
-      headerText = "Writing Failed"
-      contentText = "Error while writing ebook"
+      headerText = exception.getMessage
+      contentText = message
     }.showAndWait()
-    writeBookService.reset()
-  })
+  }
 
   def fetchCategories(event: ActionEvent): Unit = {
     fetchCategoriesService.start()
@@ -91,7 +88,11 @@ class MainWindowController(categoryList: ListView[Category], urlField: TextField
   }
 
   def writeBook(event: ActionEvent): Unit = {
-    writeBookService.start()
+    val scene = categoryList.getScene.getWindow
+    val chooser = new DirectoryChooser()
+    val output = chooser.showDialog(scene)
+    val service = new BookWriterService(posts.toList, output)
+    service.start()
   }
 
 }

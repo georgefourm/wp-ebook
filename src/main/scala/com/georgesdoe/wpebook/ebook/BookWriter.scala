@@ -1,27 +1,26 @@
 package com.georgesdoe.wpebook.ebook
 
-import java.io.FileOutputStream
+import java.io.{File, FileOutputStream}
 
 import com.georgesdoe.wpebook.wp.Post
 import nl.siegmann.epublib.domain.{Book, Resource}
 import nl.siegmann.epublib.epub.EpubWriter
 import nl.siegmann.epublib.service.MediatypeService
-
 import scalatags.Text.all._
 import scalatags.Text.tags2.title
 
-object BookWriterService {
+object BookWriter {
 
-  def write(posts: List[Post]): Unit = {
+  def write(posts: List[Post], file: File): Unit = {
     val book = new Book;
     val metadata = book.getMetadata
-    metadata.addTitle("Creepypasta Collection")
+    metadata.addTitle("WordPress Ebook")
     posts.foreach(post => {
       val xhtml = postToHtml(post)
       book.addSection(post.title.rendered, new Resource(xhtml.getBytes, MediatypeService.XHTML));
     })
     val writer = new EpubWriter()
-    writer.write(book, new FileOutputStream("output/collection.epub"))
+    writer.write(book, new FileOutputStream(file.getPath))
   }
 
   def postToHtml(post: Post): String = {

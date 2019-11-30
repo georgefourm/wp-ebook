@@ -12,13 +12,14 @@ class Client(baseUrl: String) {
     json.convertTo[Post]
   }
 
-  def fetchPosts(categoryId: Int): List[Post] = {
+  def fetchPosts(categoryId: Int, perPage: Int = 50, orderBy: String = "date", order: String = "desc"): List[Post] = {
     val response = requests.get(
       s"$baseUrl/wp-json/wp/v2/posts",
       params = Map(
         "categories" -> categoryId.toString,
-        "orderby" -> "date",
-        "order" -> "desc"
+        "orderby" -> orderBy,
+        "order" -> order,
+        "per_page" -> perPage.toString,
       )
     )
 
