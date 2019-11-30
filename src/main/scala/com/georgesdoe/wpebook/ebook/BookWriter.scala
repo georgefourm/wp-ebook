@@ -17,7 +17,7 @@ object BookWriter {
     metadata.addTitle("WordPress Ebook")
     posts.foreach(post => {
       val xhtml = postToHtml(post)
-      book.addSection(post.title.rendered, new Resource(xhtml.getBytes, MediatypeService.XHTML));
+      book.addSection(post.title.unescaped, new Resource(xhtml.getBytes, MediatypeService.XHTML));
     })
     val writer = new EpubWriter()
     writer.write(book, new FileOutputStream(file.getPath))
@@ -27,11 +27,11 @@ object BookWriter {
     val tree = html(
       xmlns:= "http://www.w3.org/1999/xhtml",
       head(
-        title(post.title.rendered)
+        title(post.title.unescaped)
       ),
       body(
-        h1(post.title.rendered),
-        raw(post.content.rendered)
+        h1(post.title.unescaped),
+        raw(post.content.unescaped)
       )
     )
 

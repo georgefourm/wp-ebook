@@ -24,7 +24,7 @@ class MainWindowController(categoryList: ListView[Category], urlField: TextField
   postsTable.items = posts
 
   titleColumn.cellValueFactory = cell => {
-    StringProperty(cell.value.title.rendered)
+    StringProperty(cell.value.title.unescaped)
   }
 
   urlColumn.cellValueFactory = cell => {

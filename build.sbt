@@ -15,7 +15,8 @@ libraryDependencies ++= Seq(
   "com.positiondev.epublib" % "epublib-core" % "3.1" excludeAll(
     ExclusionRule(organization = "xmlpull")
   ),
-  "com.lihaoyi" %% "scalatags" % "0.7.0"
+  "com.lihaoyi" %% "scalatags" % "0.7.0",
+  "org.mod4j.org.apache.commons" % "lang" % "2.1.0"
 )
 
 lazy val osName = System.getProperty("os.name") match {

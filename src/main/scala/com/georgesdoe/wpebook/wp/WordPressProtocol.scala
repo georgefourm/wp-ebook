@@ -25,7 +25,7 @@ object WordPressProtocol extends DefaultJsonProtocol {
     override def write(dateTime: LocalDateTime): JsValue = new JsString(dateTime.toString)
   }
 
-  implicit val htmlFormat: RootJsonFormat[HtmlContent] =jsonFormat1(HtmlContent)
+  implicit val htmlFormat: RootJsonFormat[HtmlContent] = jsonFormat1(HtmlContent)
   implicit val postFormat: RootJsonFormat[Post] = jsonFormat5(Post)
   implicit val categoryFormat: RootJsonFormat[Category] = jsonFormat3(Category)
 }
