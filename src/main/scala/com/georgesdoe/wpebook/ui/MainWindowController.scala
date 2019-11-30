@@ -1,5 +1,7 @@
 package com.georgesdoe.wpebook.ui
 
+import java.io.File
+
 import com.georgesdoe.wpebook.ui.service.BookWriterService
 import com.georgesdoe.wpebook.wp.{Category, Client, Post}
 import javafx.concurrent.{Service, Task}
@@ -98,7 +100,12 @@ class MainWindowController(categoryList: ListView[Category], urlField: TextField
     val scene = categoryList.getScene.getWindow
     val chooser = new DirectoryChooser()
     val output = chooser.showDialog(scene)
-    val service = new BookWriterService(posts.toList, output)
+
+    if(output == null) return
+
+    val service = new BookWriterService(posts.toList, new File(
+      output, "output.epub"
+    ))
 
     service.setOnFailed(_ => {
       showError("Failed Writing Ebook",service.getException)
