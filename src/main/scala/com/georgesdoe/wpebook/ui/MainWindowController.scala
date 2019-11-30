@@ -72,9 +72,16 @@ class MainWindowController(categoryList: ListView[Category], urlField: TextField
   })
 
   private def showError(message: String, exception: Throwable): Option[ButtonType] = {
-    new Alert(AlertType.Information) {
+    new Alert(AlertType.Error) {
       title = "Error"
-      headerText = exception.getMessage
+      headerText = message
+      contentText = exception.getMessage
+    }.showAndWait()
+  }
+
+  private def showMessage(message: String,title: String): Option[ButtonType] ={
+    new Alert(AlertType.Information) {
+      title
       contentText = message
     }.showAndWait()
   }
@@ -92,6 +99,13 @@ class MainWindowController(categoryList: ListView[Category], urlField: TextField
     val chooser = new DirectoryChooser()
     val output = chooser.showDialog(scene)
     val service = new BookWriterService(posts.toList, output)
+
+    service.setOnFailed(_ => {
+      showError("Failed Writing Ebook",service.getException)
+    })
+    service.setOnSucceeded(_ => {
+      showMessage(s"Wrote ebook to ${output.getPath}","Success")
+    })
     service.start()
   }
 
